@@ -92,15 +92,358 @@ h1{font-size:clamp(28px,7vw,58px);line-height:1.02;margin:7px 0 8px;letter-spaci
   <div><img class="logo" src="data:image/png;base64,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" alt="David Etges"><div class="edition">04 OUT 2026<br>EDIÇÃO 002 · ATUALIZADA</div></div>
 </header>
 <nav class="radar-navigation" aria-label="Navegação entre edições">
-  <a class="archive-button" href="../">Edição atual <span aria-hidden="true">↗</span></a>
+  <a class="archive-button" id="previous-editions-link" href="#historico">Edições anteriores <span aria-hidden="true">↗</span></a>
 </nav>
+
+<section class="hero">
+  <h2>O QUE VOCÊ PRECISA SABER HOJE</h2>
+  <div class="top3">
+    <div class="top"><span class="n">01</span><strong>Brasil vota hoje</strong><p>O resultado passa a ser o principal vetor doméstico para segunda-feira.</p></div>
+    <div class="top"><span class="n">02</span><strong>Hormuz segue como risco global</strong><p>Irã mantém condições para reabertura; energia e frete continuam sensíveis.</p></div>
+    <div class="top"><span class="n">03</span><strong>Rússia pressiona infraestrutura de Kyiv</strong><p>Ataques a pontes aumentam risco logístico e humanitário antes do inverno.</p></div>
+  </div>
+</section>
+
+<section>
+  <h2 class="section-title">MERCADOS · REFERÊNCIA</h2>
+  <div class="markets"><div class="market"><span>IBOV</span><strong>192.114</strong><em>+2,63%</em><small>fech. 02/10</small></div>
+<div class="market"><span>USD/BRL</span><strong>5,216</strong><em>−0,1%</em><small>fech. 02/10</small></div>
+<div class="market"><span>S&amp;P 500</span><strong>fechado</strong><em>domingo</em><small>EUA</small></div>
+<div class="market"><span>NASDAQ</span><strong>fechado</strong><em>domingo</em><small>EUA</small></div>
+<div class="market"><span>BRENT</span><strong>volátil</strong><em>geopolítica</em><small>Hormuz</small></div>
+<div class="market"><span>BTC/ETH</span><strong>24h</strong><em>mercado aberto</em><small>cripto</small></div></div>
+</section>
+
+<section>
+  <h2 class="section-title">FILTRAR THE PULSE</h2>
+  <div class="filters">
+    <button class="filter active" data-filter="ALL">TODOS</button>
+    <button class="filter" data-filter="POLÍTICA">POLÍTICA</button>
+    <button class="filter" data-filter="CONFLITOS">CONFLITOS</button>
+    <button class="filter" data-filter="MERCADOS">MERCADOS</button>
+    <button class="filter" data-filter="IA">IA</button>
+    <button class="filter" data-filter="HOTELARIA">HOTELARIA</button>
+    <button class="filter" data-filter="TURISMO">TURISMO</button>
+    <button class="filter" data-filter="PARQUES">PARQUES</button>
+  </div>
+</section>
+
+<section id="noticias">
+  <h2 class="section-title">POLÍTICA · GEOPOLÍTICA · NEGÓCIOS</h2>
+  
+<article class="news-card" data-tag="POLÍTICA BRASIL">
+  <button class="card-head" type="button" aria-expanded="false">
+    <span class="tag">POLÍTICA BRASIL</span>
+    <span class="chev">+</span>
+    <h3>Brasil vota hoje no 1º turno das eleições gerais</h3>
+  </button>
+  <div class="card-body">
+    <p>A votação ocorre das 8h às 17h, no horário de Brasília. Cerca de 158,8 milhões de eleitores estão aptos a escolher presidente, governadores, 2 senadores por Estado e representantes para Câmara e Assembleias.</p>
+    <div class="impact"><span>POR QUE IMPORTA</span><p>A composição do Executivo e do Congresso tende a influenciar ambiente regulatório, confiança, câmbio, juros e decisões de investimento a partir de 2027.</p></div>
+    <div class="meta">Poder360 · 04 OUT 2026</div>
+    <a class="source-link" href="https://www.poder360.com.br/poder-eleicoes-2026/eleicoes-2026-votacao-comeca-as-8h-veja-tudo-o-que-precisa-saber/" target="_blank" rel="noopener noreferrer">Abrir matéria original ↗</a>
+  </div>
+</article>
+
+
+<article class="news-card" data-tag="POLÍTICA BRASIL">
+  <button class="card-head" type="button" aria-expanded="false">
+    <span class="tag">POLÍTICA BRASIL</span>
+    <span class="chev">+</span>
+    <h3>Pesquisas de véspera mostram disputa presidencial apertada</h3>
+  </button>
+  <div class="card-body">
+    <p>Compilação do Poder360 mostra Lula numericamente à frente em 10 de 14 levantamentos de 1º turno; em simulações de eventual 2º turno, os resultados estão divididos entre os dois principais nomes, com empates em parte dos estudos.</p>
+    <div class="impact"><span>POR QUE IMPORTA</span><p>Pesquisa não é resultado. O dado relevante hoje é a apuração oficial; diferenças metodológicas entre institutos impedem tratar os levantamentos como uma série única.</p></div>
+    <div class="meta">Poder360 · 04 OUT 2026</div>
+    <a class="source-link" href="https://www.poder360.com.br/poder-eleicoes-2026/saiba-como-estao-lula-e-flavio-nas-ultimas-14-pesquisas-divulgadas/" target="_blank" rel="noopener noreferrer">Abrir matéria original ↗</a>
+  </div>
+</article>
+
+
+<article class="news-card" data-tag="POLÍTICA EUA">
+  <button class="card-head" type="button" aria-expanded="false">
+    <span class="tag">POLÍTICA EUA</span>
+    <span class="chev">+</span>
+    <h3>Meio de mandato entra no centro da política americana</h3>
+  </button>
+  <div class="card-body">
+    <p>Nos EUA, a campanha para as eleições legislativas de novembro ganhou intensidade. Pesquisa AP-NORC mostra vantagem dos democratas em alguns temas econômicos, mas baixa confiança dos eleitores na capacidade dos dois partidos de resolver problemas.</p>
+    <div class="impact"><span>POR QUE IMPORTA</span><p>Mudanças no equilíbrio do Congresso podem afetar orçamento, regulação, energia, comércio exterior, IA e capacidade legislativa da Casa Branca.</p></div>
+    <div class="meta">Associated Press · 03 OUT 2026</div>
+    <a class="source-link" href="https://apnews.com/article/109768f7544c9e0fcc7e716de0dc2157" target="_blank" rel="noopener noreferrer">Abrir matéria original ↗</a>
+  </div>
+</article>
+
+
+<article class="news-card" data-tag="CONFLITOS">
+  <button class="card-head" type="button" aria-expanded="false">
+    <span class="tag">CONFLITOS</span>
+    <span class="chev">+</span>
+    <h3>EUA–Irã: Estreito de Hormuz segue no centro do risco global</h3>
+  </button>
+  <div class="card-body">
+    <p>O Irã afirmou hoje que o Estreito de Hormuz não será reaberto até que condições previstas em um acordo provisório sejam atendidas. O impasse ocorre após meses de conflito e negociações mediadas por países da região.</p>
+    <div class="impact"><span>POR QUE IMPORTA</span><p>Hormuz é um gargalo crítico de energia. Persistência do fechamento ou novos ataques a navios mantêm risco elevado para petróleo, frete, inflação, aviação e cadeias globais.</p></div>
+    <div class="meta">Reuters / Arab News · 04 OUT 2026</div>
+    <a class="source-link" href="https://www.arabnews.com/middle-east/iran-says-strait-of-hormuz-will-not-reopen-until-conditions-are-met-3004533" target="_blank" rel="noopener noreferrer">Abrir matéria original ↗</a>
+  </div>
+</article>
+
+
+<article class="news-card" data-tag="CONFLITOS">
+  <button class="card-head" type="button" aria-expanded="false">
+    <span class="tag">CONFLITOS</span>
+    <span class="chev">+</span>
+    <h3>Israel e Oriente Médio: Gaza, Yemen e rotas marítimas seguem instáveis</h3>
+  </button>
+  <div class="card-body">
+    <p>Um ataque israelense em Gaza matou uma pessoa neste domingo, segundo autoridades locais, enquanto novas ações militares também foram registradas no Yemen. Um navio no Estreito de Hormuz foi atingido por um projétil, sem autoria confirmada.</p>
+    <div class="impact"><span>POR QUE IMPORTA</span><p>O risco regional não está concentrado em uma única frente: Gaza, Yemen, Irã e rotas marítimas podem afetar energia, seguro, transporte e segurança de viagens.</p></div>
+    <div class="meta">Associated Press · 04 OUT 2026</div>
+    <a class="source-link" href="https://apnews.com/article/a37b24d446b3066d3b17441ac5bb0264" target="_blank" rel="noopener noreferrer">Abrir matéria original ↗</a>
+  </div>
+</article>
+
+
+<article class="news-card" data-tag="CONFLITOS">
+  <button class="card-head" type="button" aria-expanded="false">
+    <span class="tag">CONFLITOS</span>
+    <span class="chev">+</span>
+    <h3>Rússia intensifica ataques à infraestrutura de Kyiv</h3>
+  </button>
+  <div class="card-body">
+    <p>Ataques russos voltaram a atingir pontes e infraestrutura na capital ucraniana. O chanceler alemão Friedrich Merz visitou Kyiv neste domingo e reafirmou apoio à Ucrânia.</p>
+    <div class="impact"><span>POR QUE IMPORTA</span><p>A pressão sobre infraestrutura antes do inverno aumenta risco humanitário e logístico. Também mantém Europa exposta a custos maiores de defesa, energia e reconstrução.</p></div>
+    <div class="meta">Associated Press · 04 OUT 2026</div>
+    <a class="source-link" href="https://apnews.com/article/89bb8d2a97cc09d01a316723d08d2fb3" target="_blank" rel="noopener noreferrer">Abrir matéria original ↗</a>
+  </div>
+</article>
+
+
+<article class="news-card" data-tag="CONFLITOS">
+  <button class="card-head" type="button" aria-expanded="false">
+    <span class="tag">CONFLITOS</span>
+    <span class="chev">+</span>
+    <h3>China–Taiwan: primeiros novos F-16V chegam à ilha</h3>
+  </button>
+  <div class="card-body">
+    <p>Taiwan recebeu os primeiros caças F-16V Block 70 de uma encomenda feita aos EUA. O movimento ocorre em um ambiente de pressão militar chinesa recorrente ao redor da ilha.</p>
+    <div class="impact"><span>POR QUE IMPORTA</span><p>Taiwan concentra parte crítica da cadeia global de semicondutores. Qualquer escalada afeta tecnologia, eletrônicos, data centers, automóveis e comércio internacional.</p></div>
+    <div class="meta">AP / CNN Brasil · 02 OUT 2026</div>
+    <a class="source-link" href="https://www.cnnbrasil.com.br/internacional/cacas-americanos-chegam-a-taiwan-apos-encontro-entre-trump-e-xi/" target="_blank" rel="noopener noreferrer">Abrir matéria original ↗</a>
+  </div>
+</article>
+
+
+<article class="news-card" data-tag="CONFLITOS">
+  <button class="card-head" type="button" aria-expanded="false">
+    <span class="tag">CONFLITOS</span>
+    <span class="chev">+</span>
+    <h3>Coreias: Seul mantém estratégia de reabrir diálogo com Pyongyang</h3>
+  </button>
+  <div class="card-body">
+    <p>A Coreia do Sul vem defendendo uma abordagem gradual para reduzir o programa nuclear norte-coreano, com incentivos políticos e econômicos em troca de passos verificáveis. Pyongyang segue resistente ao diálogo.</p>
+    <div class="impact"><span>POR QUE IMPORTA</span><p>A península coreana permanece um risco estrutural para o nordeste asiático, mas sem nova escalada material identificada nesta manhã.</p></div>
+    <div class="meta">Associated Press · semana passada</div>
+    <a class="source-link" href="https://apnews.com/article/2c12c8b88ca37e9dab861af584efa574" target="_blank" rel="noopener noreferrer">Abrir matéria original ↗</a>
+  </div>
+</article>
+
+
+<article class="news-card" data-tag="CONFLITOS">
+  <button class="card-head" type="button" aria-expanded="false">
+    <span class="tag">CONFLITOS</span>
+    <span class="chev">+</span>
+    <h3>Índia–Paquistão: cessar-fogo segue, mas confiança continua baixa</h3>
+  </button>
+  <div class="card-body">
+    <p>Não há escalada militar nova de grande porte nesta manhã. A relação permanece frágil após confrontos anteriores, com Caxemira ainda como principal foco de tensão.</p>
+    <div class="impact"><span>POR QUE IMPORTA</span><p>A ausência de escalada é positiva, mas qualquer incidente relevante pode rapidamente afetar segurança regional e mercados no sul da Ásia.</p></div>
+    <div class="meta">BBC · acompanhamento regional</div>
+    <a class="source-link" href="https://bbc.com.im/news/topics/cx3ezqn30pmt" target="_blank" rel="noopener noreferrer">Abrir matéria original ↗</a>
+  </div>
+</article>
+
+
+<article class="news-card" data-tag="MERCADOS">
+  <button class="card-head" type="button" aria-expanded="false">
+    <span class="tag">MERCADOS</span>
+    <span class="chev">+</span>
+    <h3>Brasil entra no domingo eleitoral com Bolsa em máxima recente</h3>
+  </button>
+  <div class="card-body">
+    <p>Na sexta-feira, o Ibovespa fechou em 192.114 pontos, alta de 2,63%, e o dólar encerrou em R$ 5,216. Dados mais fracos de emprego nos EUA ajudaram ativos de risco.</p>
+    <div class="impact"><span>POR QUE IMPORTA</span><p>Hoje não há pregão local. A abertura de segunda-feira tende a incorporar simultaneamente o resultado eleitoral e o cenário externo.</p></div>
+    <div class="meta">UOL Economia · 02 OUT 2026</div>
+    <a class="source-link" href="https://economia.uol.com.br/cotacoes/noticias/redacao/2026/10/02/dolar-bolsa-fechamento-hoje-2-de-outubro-de-2026.ghtm" target="_blank" rel="noopener noreferrer">Abrir matéria original ↗</a>
+  </div>
+</article>
+
+
+<article class="news-card" data-tag="IA">
+  <button class="card-head" type="button" aria-expanded="false">
+    <span class="tag">IA</span>
+    <span class="chev">+</span>
+    <h3>Casa Branca cria força-tarefa federal para IA avançada</h3>
+  </button>
+  <div class="card-body">
+    <p>Donald Trump designou Jay Clayton para liderar uma nova força-tarefa federal voltada a inteligência artificial avançada, reunindo segurança nacional, governo e indústria.</p>
+    <div class="impact"><span>POR QUE IMPORTA</span><p>A governança de IA nos EUA passa a ganhar ainda mais peso estratégico. Isso pode influenciar padrões globais de regulação, segurança, compras públicas e competição tecnológica.</p></div>
+    <div class="meta">Associated Press · 04 OUT 2026</div>
+    <a class="source-link" href="https://apnews.com/article/b8689ea07de9102a52bd1cd2049b5901" target="_blank" rel="noopener noreferrer">Abrir matéria original ↗</a>
+  </div>
+</article>
+
+
+<article class="news-card" data-tag="IA">
+  <button class="card-head" type="button" aria-expanded="false">
+    <span class="tag">IA</span>
+    <span class="chev">+</span>
+    <h3>OpenAI enfrenta pressão jurídica e regulatória sobre agentes</h3>
+  </button>
+  <div class="card-body">
+    <p>O Financial Times relata aumento de ações judiciais e investigações após incidentes envolvendo agentes de IA e acesso indevido a dados de organizações.</p>
+    <div class="impact"><span>POR QUE IMPORTA</span><p>Para empresas, o recado é claro: agentes autônomos ampliam produtividade, mas também responsabilidade, superfície de ataque e necessidade de governança.</p></div>
+    <div class="meta">Financial Times · 04 OUT 2026</div>
+    <a class="source-link" href="https://www.ft.com/content/2c24ece3-ac99-43a8-b0e6-4a3867e37ebf" target="_blank" rel="noopener noreferrer">Abrir matéria original ↗</a>
+  </div>
+</article>
+
+
+<article class="news-card" data-tag="HOTELARIA">
+  <button class="card-head" type="button" aria-expanded="false">
+    <span class="tag">HOTELARIA</span>
+    <span class="chev">+</span>
+    <h3>Atlantica projeta dez novos hotéis no Brasil em 2027</h3>
+  </button>
+  <div class="card-body">
+    <p>A rede informou que pretende abrir dez novos hotéis em 2027, com bandeiras como Transamerica, Radisson e Hilton.</p>
+    <div class="impact"><span>POR QUE IMPORTA</span><p>Expansão de redes reforça competição por ativos, operadores, mão de obra e demanda corporativa e de lazer. Vale acompanhar localização, modelo de operação e capex.</p></div>
+    <div class="meta">PANROTAS · 01 OUT 2026</div>
+    <a class="source-link" href="https://www.panrotas.com.br/tudo-sobre/hoteis" target="_blank" rel="noopener noreferrer">Abrir matéria original ↗</a>
+  </div>
+</article>
+
+
+<article class="news-card" data-tag="HOTELARIA">
+  <button class="card-head" type="button" aria-expanded="false">
+    <span class="tag">HOTELARIA</span>
+    <span class="chev">+</span>
+    <h3>Casa Grande investe R$ 18 milhões e amplia foco em famílias</h3>
+  </button>
+  <div class="card-body">
+    <p>O resort no Guarujá conclui ciclo de modernização que inclui retrofit de apartamentos e um novo Parque da Criança de 5 mil m².</p>
+    <div class="impact"><span>POR QUE IMPORTA</span><p>A lógica é relevante para resorts de lazer: ampliar permanência e ticket da família por meio de atrações próprias, e não apenas hospedagem.</p></div>
+    <div class="meta">PANROTAS · 01 OUT 2026</div>
+    <a class="source-link" href="https://www.panrotas.com.br/hotelaria/investimentos/2026/10/casa-grande-hotel-investe-em-atracoes-para-o-publico-infantil-e-preve-faturamento-recorde_232519.html" target="_blank" rel="noopener noreferrer">Abrir matéria original ↗</a>
+  </div>
+</article>
+
+
+<article class="news-card" data-tag="PARQUES">
+  <button class="card-head" type="button" aria-expanded="false">
+    <span class="tag">PARQUES</span>
+    <span class="chev">+</span>
+    <h3>Parques e atrações mantêm ciclo robusto de investimento no Brasil</h3>
+  </button>
+  <div class="card-body">
+    <p>O panorama setorial mais recente aponta R$ 11,5 bilhões em investimentos programados no segmento, sendo R$ 7,1 bilhões em novos projetos.</p>
+    <div class="impact"><span>POR QUE IMPORTA</span><p>O setor continua atraindo capital e profissionalização. Para o Curupy, isso aumenta tanto o potencial de demanda quanto a necessidade de diferenciação de produto.</p></div>
+    <div class="meta">PANROTAS · Panorama Setorial 2026</div>
+    <a class="source-link" href="https://www.panrotas.com.br/destinos/parques-tematicos/2026/05/parques-e-atracoes-movimentam-r-115-bilhoes-em-investimentos-no-brasil_228481.html" target="_blank" rel="noopener noreferrer">Abrir matéria original ↗</a>
+  </div>
+</article>
+
+
+<article class="news-card" data-tag="TURISMO">
+  <button class="card-head" type="button" aria-expanded="false">
+    <span class="tag">TURISMO</span>
+    <span class="chev">+</span>
+    <h3>Beach Park colocou novo resort de R$ 150 milhões em operação</h3>
+  </button>
+  <div class="card-body">
+    <p>O Ohana Beach Park Resort iniciou soft opening em Aquiraz, reforçando a estratégia de combinar hospedagem, parque e entretenimento em um mesmo destino.</p>
+    <div class="impact"><span>POR QUE IMPORTA</span><p>É um benchmark direto para modelos integrados de parque + resort, especialmente em experiência familiar, captura de diária e aumento de permanência.</p></div>
+    <div class="meta">PANROTAS · 29 SET 2026</div>
+    <a class="source-link" href="https://www.panrotas.com.br/tudo-sobre/hotel" target="_blank" rel="noopener noreferrer">Abrir matéria original ↗</a>
+  </div>
+</article>
+
+</section>
+
+<section class="decision">
+  <h2 class="section-title">THE PULSE PARA DECISÃO · GRUPO CURUPY</h2>
+  <ul>
+    <li><strong>Eleição brasileira:</strong> evitar leitura precipitada hoje. O dado útil para planejamento será a combinação entre resultado presidencial, composição do Congresso e reação de juros/câmbio na segunda.</li>
+    <li><strong>Oriente Médio:</strong> Hormuz continua sendo o principal risco externo de curto prazo para combustíveis, passagens aéreas, inflação e custo de insumos importados.</li>
+    <li><strong>Resorts:</strong> Casa Grande e Beach Park reforçam uma tese importante: família, atração própria e hospedagem integrada continuam sendo vetores claros de diferenciação e ticket.</li>
+  </ul>
+</section>
+
+<section class="watch">
+  <div class="box">
+    <h2 class="section-title">3 COISAS PARA ACOMPANHAR HOJE</h2>
+    <ol>
+      <li>Apuração oficial das eleições brasileiras e composição do Congresso.</li>
+      <li>Sinais de negociação EUA–Irã sobre Hormuz e segurança marítima.</li>
+      <li>Novos ataques em Ucrânia e reação europeia após visita alemã a Kyiv.</li>
+    </ol>
+  </div>
+  <div class="box">
+    <h2 class="section-title">LEITURA PARA GUARDAR</h2>
+    <p><strong>AP · EUA–Irã</strong><br>Panorama das negociações para reabrir Hormuz e reduzir o conflito.</p>
+    <a class="source-link" href="https://apnews.com/article/871504dbd98d9b08b226b9805d8f4606" target="_blank" rel="noopener noreferrer">Abrir leitura ↗</a>
+  </div>
+</section>
+
 <section class="edition-history" id="historico" aria-labelledby="history-title" tabindex="-1">
   <h2 class="section-title" id="history-title">EDIÇÕES ANTERIORES</h2>
   <p>Nenhuma edição anterior foi adicionada a este histórico.</p>
   <p>Você está lendo a edição de 04/10/2026.</p>
-  <a class="source-link" href="../">Abrir edição atual ↗</a>
+  <a class="source-link" href="#inicio">Voltar ao início ↑</a>
 </section>
-
+<div class="footer">
+  DAVID ETGES · DISCIPLINA · CONSTÂNCIA · EVOLUÇÃO<br>
+  Curadoria executiva para leitura rápida. Fatos de guerra e política podem evoluir durante o dia; consulte a fonte original para atualizações.
 </div>
+</div>
+
+<script>
+(() => {
+  const cards = [...document.querySelectorAll('.news-card')];
+  document.querySelectorAll('.card-head').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const card = btn.closest('.news-card');
+      card.classList.toggle('open');
+      btn.setAttribute('aria-expanded', card.classList.contains('open') ? 'true' : 'false');
+    });
+  });
+  document.querySelectorAll('.filter').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const f = btn.dataset.filter;
+      cards.forEach(card => {
+        card.classList.toggle('hidden', f !== 'ALL' && !card.dataset.tag.includes(f));
+      });
+    });
+  });
+})();
+</script>
+<script>
+(() => {
+  const link = document.getElementById('previous-editions-link');
+  // O caminho relativo preserva o prefixo do projeto no GitHub Pages.
+  // Ao abrir o HTML como arquivo (inclusive no celular), usa o histórico interno.
+  if (location.protocol === 'https:' || location.protocol === 'http:') {
+    link.setAttribute('href', 'arquivo/');
+  } else {
+    link.addEventListener('click', () => {
+      document.getElementById('historico').focus({ preventScroll: true });
+    });
+  }
+})();
+</script>
 </body>
 </html>
