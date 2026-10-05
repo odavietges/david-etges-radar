@@ -1,20 +1,80 @@
 # THE PULSE · por David Etges
 
-O que move o mundo. O que muda sua decisão.
+**O que move o mundo. O que muda sua decisão.**
 
-Curadoria executiva de economia, política, geopolítica, tecnologia, IA, turismo, hotelaria e mercados.
+Curadoria executiva diária de economia, mercados, política, geopolítica, conflitos, tecnologia, IA, turismo, hotelaria, parques, real estate turístico, capital global, offshore e cripto.
 
-Site: https://odavietges.github.io/david-etges-radar/
+Site público: https://odavietges.github.io/david-etges-radar/
 
-## Edições
+Histórico: https://odavietges.github.io/david-etges-radar/arquivo/
+
+## Arquitetura cloud-only
+
+A operação diária não depende do notebook do usuário.
+
+Fluxo:
+
+ChatGPT Automation → GitHub Connector → repositório → GitHub Pages → navegador.
+
+## Estrutura
 
 - `index.html`: edição mais recente.
 - `arquivo/index.html`: índice de edições.
 - `arquivo/AAAA-MM-DD.html`: edição preservada por data.
-- `arquivo/edicoes.json`: registro de edições publicadas.
+- `arquivo/edicoes.json`: registro estruturado das edições.
+- `arquivo/teste-nuvem.html`: prova do fluxo ChatGPT → GitHub → GitHub Pages.
 
-## Atualização diária
+## Rotina diária
 
-O fluxo é executado por uma automação deste chat no Codex, prevista para iniciar diariamente às 07:30 no fuso America/Cuiaba. A pesquisa, a geração e a publicação levam tempo; o horário de início não garante que a página esteja atualizada exatamente às 07:30. A execução depende da disponibilidade do Codex e das integrações.
+- 07:15 America/Cuiaba: a automação pesquisa, gera e publica a edição.
+- 07:30 America/Cuiaba: a automação de aviso confirma se a edição do dia está publicada e envia o link fixo.
 
-Cada edição deve usar fontes verificáveis e links diretos, distinguir fatos de inferências, preservar a identidade visual e arquivar as edições. Se a pesquisa ou publicação falhar, a edição anterior permanece disponível e a falha deve ser informada, sem anunciar dados antigos como novos.
+## Regras de publicação
+
+1. Ler o `index.html` vigente.
+2. Preservar a edição anterior em `arquivo/AAAA-MM-DD.html`.
+3. Criar ou atualizar a edição do dia.
+4. Atualizar `index.html`.
+5. Atualizar `arquivo/edicoes.json`.
+6. Atualizar `arquivo/index.html`.
+7. Reler os arquivos pela integração GitHub para confirmar a escrita.
+8. Nunca apagar histórico.
+9. Se pesquisa ou escrita falhar, manter a última edição válida no ar.
+10. Não publicar edição vazia nem inventar conteúdo.
+
+## Conteúdo permanente
+
+### Política & Geopolítica
+Brasil e mundo, com atenção especial aos EUA, sempre de forma factual e neutra.
+
+### Conflitos & Segurança Global
+Rússia–Ucrânia; Israel, Irã e Oriente Médio; EUA–Irã; Hormuz; Yemen/Houthis/Mar Vermelho/Bab el-Mandeb; China–Taiwan; Coreias; Índia–Paquistão; e outros conflitos relevantes quando houver fato novo material.
+
+### Análise de Mercado · Pablo Spyer
+Usar somente conteúdo público recente e verificável, identificado explicitamente como visão de Pablo Spyer. Se não houver atualização relevante, declarar isso.
+
+### Turismo & Hotelaria
+Priorizar PANROTAS, Hotelier News, SINDEPAT, ADIBRA, ADIT Brasil, IAAPA, Secovi-SP e Turismo Compartilhado, com foco em resorts, parques, atrações, multipropriedade, timeshare, condo-hotel, branded residences, real estate turístico, investimentos, expansão e demanda.
+
+## Identidade visual
+
+- Fundo: `#000000`
+- Texto: `#FFFFFF`
+- Dourado oficial: `#D4A15E`
+- Mobile-first
+- Sem gradientes, glow ou efeitos supérfluos
+- Logo preservada sem alteração geométrica
+
+## Segurança
+
+Nenhum token, senha, cookie, API key ou credencial deve ser salvo no repositório.
+
+## Versionamento
+
+Commit recomendado:
+
+```
+THE PULSE — YYYY-MM-DD
+```
+
+Reexecuções no mesmo dia devem atualizar a mesma edição, sem duplicatas.
