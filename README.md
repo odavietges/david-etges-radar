@@ -22,25 +22,25 @@ ChatGPT Automation → GitHub Connector → repositório → GitHub Pages → na
 - `arquivo/index.html`: índice de edições.
 - `arquivo/AAAA-MM-DD.html`: edição preservada por data.
 - `arquivo/edicoes.json`: registro estruturado das edições.
-- `arquivo/teste-nuvem.html`: prova do fluxo ChatGPT → GitHub → GitHub Pages.
+- `arquivo/teste-nuvem.html`: teste histórico; não comprova sozinho a execução diária.
 
 ## Rotina diária
 
-- 07:15 America/Cuiaba: a automação pesquisa, gera e publica a edição.
+- 06:45 America/Cuiaba: a automação pesquisa, gera e publica a edição.
 - 07:30 America/Cuiaba: a automação de aviso confirma se a edição do dia está publicada e envia o link fixo.
 
 ## Regras de publicação
 
-1. Ler o `index.html` vigente.
-2. Preservar a edição anterior em `arquivo/AAAA-MM-DD.html`.
-3. Criar ou atualizar a edição do dia.
-4. Atualizar `index.html`.
-5. Atualizar `arquivo/edicoes.json`.
-6. Atualizar `arquivo/index.html`.
-7. Reler os arquivos pela integração GitHub para confirmar a escrita.
-8. Nunca apagar histórico.
-9. Se pesquisa ou escrita falhar, manter a última edição válida no ar.
-10. Não publicar edição vazia nem inventar conteúdo.
+1. Ler head, árvore, edição vigente e registro completo.
+2. Preservar os bytes de todos os arquivos de edições anteriores.
+3. Preparar e validar os quatro arquivos da edição antes de atualizar main.
+4. Criar blobs, uma árvore baseada no head vigente e um único commit.
+5. Atualizar main com expected_sha e force=false; jamais forçar ou apagar histórico.
+6. Reler os quatro arquivos, exigir deploy Pages concluído com success e conferir a página pública.
+7. Só anunciar sucesso quando a data pública for a data corrente em America/Cuiaba.
+8. Em falha, preservar a última edição válida, explicitar a etapa pendente e manter as tarefas agendadas.
+9. Não inventar conteúdo, cotações, opiniões, datas ou edições ausentes.
+10. Seguir [operacao/PUBLICACAO.md](operacao/PUBLICACAO.md).
 
 ## Conteúdo permanente
 
@@ -77,4 +77,4 @@ Commit recomendado:
 THE PULSE — YYYY-MM-DD
 ```
 
-Reexecuções no mesmo dia devem atualizar a mesma edição, sem duplicatas.
+Reexecuções no mesmo dia validam a edição já completa, sem duplicatas. Correções editoriais posteriores exigem motivo explícito e preservação do histórico Git.
