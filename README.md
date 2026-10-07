@@ -78,3 +78,7 @@ THE PULSE — YYYY-MM-DD
 ```
 
 Reexecuções no mesmo dia validam a edição já completa, sem duplicatas. Correções editoriais posteriores exigem motivo explícito e preservação do histórico Git.
+
+## Conferência pública automática
+
+O workflow `Validar publicação pública` roda em GitHub Actions a cada push, usando somente leitura. Confere os quatro arquivos e todas as edições arquivadas contra a resposta pública do Pages. O aviso exige edição corrente, deploy concluído e essa conferência concluída com sucesso; um bloqueio da ferramenta web não deve ser confundido com falha do site. A prova deve corresponder ao head que contém a edição verificada.

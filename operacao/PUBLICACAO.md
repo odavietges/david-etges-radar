@@ -15,7 +15,8 @@ As tarefas hospedadas no ChatGPT são Publicar THE PULSE (06:45) e Avisar THE PU
 7. Validar dados, fontes, horários das cotações, estrutura HTML, JS, links e datas. Não preencher cotação indisponível com estimativa.
 8. Pela integração GitHub, criar blobs (create_blob), árvore baseada na árvore lida (create_tree) e commit cujo parent é o head lido (create_commit). Atualizar main (update_ref) com expected_sha=head e force=false.
 9. Em concorrência, reler o novo head e preservar as alterações. Não forçar a referência. Antes da atualização de main, nenhum blob ou commit isolado muda o site.
-10. Reler os quatro arquivos e confirmar seu conteúdo. Verificar o workflow Pages associado ao commit: completed e success. Abrir a URL pública e confirmar data, conteúdo, filtros, cards, arquivo datado e histórico.
+10. O workflow Validar publicação pública roda a cada push e compara os quatro arquivos e todas as edições do registro com as respectivas respostas HTTPS públicas, byte a byte. Aguarda até dez minutos a propagação do Pages. Só tem permissão de leitura e não modifica conteúdos. Uma execução success associada ao head que contém a edição é uma prova independente da publicação pública, consultável pela integração GitHub mesmo quando a ferramenta web não consegue abrir Pages. Exigir data da edição corrente no repositório, deploy Pages success e este workflow success. Resultado histórico de outra edição não basta.
+11. Reler os quatro arquivos e confirmar seu conteúdo. Verificar o workflow Pages associado ao commit: completed e success. Abrir a URL pública e confirmar data, conteúdo, filtros, cards, arquivo datado e histórico.
 
 ## Aviso e falhas
 

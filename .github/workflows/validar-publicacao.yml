@@ -1,0 +1,22 @@
+name: Validar publicação pública
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: pulse-public-validation
+  cancel-in-progress: true
+jobs:
+  validar:
+    name: Conferir edição e histórico no Pages
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Ler o commit publicado
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Confirmar conteúdo público e histórico
+        run: python3 operacao/verificar_publicacao.py
