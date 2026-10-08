@@ -36,3 +36,17 @@ As instruções das duas tarefas foram corrigidas para publicação conjunta, co
 
 Site: https://odavietges.github.io/david-etges-radar/
 Histórico: https://odavietges.github.io/david-etges-radar/arquivo/
+
+## Diagnóstico de 08/10/2026 e limite de recuperação
+
+A inspeção do repositório encontrou main em 5c26ea61962ad781adfc42c1e4775d6aa87629fc, sem commit nem arquivo datado de 08/10. Pages (37662465102) e Validar publicação pública (37662466170) concluíram com success para esse mesmo commit de 07/10. O registro contém 04, 05 e 07/10, sem duplicatas. A consulta de main informou protected=false e a lista de rulesets retornou vazia; esses resultados não revelam todas as políticas da integração.
+
+O relato acessível da tarefa atribui a falha à revisão de segurança da escrita pela integração, antes do commit. O texto técnico da rejeição não está disponível nesse relato. A inspeção das permissões de GitHub mostrou Use my default, com padrão Allow low-risk actions. Essa configuração pode negar ações sensíveis, mas não prova por que esta chamada específica foi rejeitada. Não afirmar que a causa é token vencido, branch protection, conteúdo sensível ou ausência de permissão sem a resposta correspondente.
+
+O workflow de conferência agora também executa às 11:30 UTC (07:30 America/Cuiaba). Em execução agendada, exige --require-current: após verificar os bytes públicos, falha se a edição não corresponde à data corrente. Em push, confere a publicação do commit sem converter uma edição histórica consistente em edição de hoje. O acionamento manual exige a data corrente por padrão. O resumo identifica GITHUB_SHA e data efetivamente verificada. Horários de GitHub Actions podem sofrer atraso; esse agendamento não garante entrega às 07:30.
+
+Essa conferência é somente leitura, não gera notícias e não substitui Publicar THE PULSE nem Avisar THE PULSE. Um resultado success de push só confirma os bytes do commit: o aviso ainda deve exigir a data corrente e os dois workflows success para o SHA correto.
+
+Não existe correção de YAML capaz de remover uma negativa externa de segurança. Não mover a escrita para outro conector, GitHub Actions, navegador ou credencial para evitar a negativa. Registrar a resposta exata quando disponível e encaminhar a revisão pelos controles oficiais da integração. Não repetir a operação negada, publicar conteúdo sem pesquisa atual, avançar a data nem pausar tarefas por falha isolada. As regras de transação atômica dos quatro arquivos permanecem obrigatórias.
+
+A criação de objetos Git para a correção foi aceita nesta sessão pela conexão existente. Isso confirma apenas essas operações, não a remoção da regra externa nem a capacidade de uma futura tarefa agendada. A recuperação editorial de 08/10 usa nova pesquisa pública; nenhuma afirmação do relato anterior foi reutilizada como evidência de notícia.

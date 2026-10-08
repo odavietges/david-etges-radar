@@ -2,12 +2,19 @@ name: Validar publicação pública
 on:
   push:
     branches: [main]
+  schedule:
+    - cron: '30 11 * * *'
   workflow_dispatch:
+    inputs:
+      require_current:
+        description: Exigir edição da data corrente em America/Cuiaba
+        type: boolean
+        default: true
 permissions:
   contents: read
 concurrency:
-  group: pulse-public-validation
-  cancel-in-progress: true
+  group: pulse-public-validation-${{ github.event_name }}
+  cancel-in-progress: false
 jobs:
   validar:
     name: Conferir edição e histórico no Pages
@@ -17,6 +24,14 @@ jobs:
       - name: Ler o commit publicado
         uses: actions/checkout@v4
         with:
+          ref: ${{ github.sha }}
           persist-credentials: false
       - name: Confirmar conteúdo público e histórico
-        run: python3 operacao/verificar_publicacao.py
+        env:
+          REQUIRE_CURRENT: ${{ github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.require_current) }}
+        run: |
+          if [ "$REQUIRE_CURRENT" = "true" ]; then
+            python3 operacao/verificar_publicacao.py --require-current
+          else
+            python3 operacao/verificar_publicacao.py
+          fi
