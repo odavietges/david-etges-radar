@@ -21,6 +21,8 @@ DATE = os.environ.get('PULSE_DATE', TODAY)
 assert DATE == TODAY, 'A pesquisa atravessou a mudança de data; não publicar'
 assert os.environ.get('GITHUB_REF', 'refs/heads/main') == 'refs/heads/main', 'Usar main'
 FILES = ['index.html', f'arquivo/{DATE}.html', 'arquivo/edicoes.json', 'arquivo/index.html']
+MONTHS = ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ']
+DATE_LABEL = f'{DATE[8:]} {MONTHS[int(DATE[5:7])-1]} {DATE[:4]}'
 
 def git(*args):
     return subprocess.check_output(['git', *args])
@@ -82,6 +84,16 @@ def render():
     def esc(value):
         assert isinstance(value, str) and len(value) < 6000
         return escaping.escape(value, quote=True)
+    def prose(value):
+        pieces, position = [], 0
+        for match in re.finditer(r'\[([^\]]+)\]\((https://[^\s)]+)\)', value):
+            pieces.append(esc(value[position:match.start()]))
+            url = urlparse(match[2])
+            assert url.hostname and not url.username and not url.password
+            pieces.append(f'<a class="source-link" href="{esc(match[2])}" target="_blank" rel="noopener noreferrer">{esc(match[1])}</a>')
+            position = match.end()
+        pieces.append(esc(value[position:]))
+        return ''.join(pieces)
     def source(value):
         url = urlparse(value['url'])
         assert url.scheme == 'https' and url.hostname and not url.username and not url.password
@@ -97,13 +109,15 @@ def render():
     assert edition_matches
     number = max(int(n) for n in edition_matches) + 1
     page = base.replace(old_date, DATE).replace(old_pretty, pretty)
+    page, date_count = re.subn(r'(<div class="edition">)[^<]*(<br>)', lambda m: m[1] + DATE_LABEL + m[2], page, count=1)
+    assert date_count == 1, 'Data visível do cabeçalho ausente'
     page = re.sub(r'(Edição )\d+', lambda m: m[1] + f'{number:03d}', page, flags=re.I)
     def replace_section(name, value):
         nonlocal page
         pattern = rf'<section id="{name}"[\s\S]*?</section>'
         page, count = re.subn(pattern, lambda m: value, page, count=1)
         assert count == 1, 'Template não contém seção ' + name
-    top = ''.join(f'<div class="top"><strong>{esc(h["title"])}</strong><p>{esc(h["text"])}</p></div>' for h in data['highlights'])
+    top = ''.join(f'<div class="top"><strong>{esc(h["title"])}</strong><p>{prose(h["text"])}</p></div>' for h in data['highlights'])
     replace_section('destaques', f'<section id="destaques"><h2 class="section-title">O QUE VOCÊ PRECISA SABER HOJE</h2><div class="top3">{top}</div></section>')
     now = datetime.now(ZoneInfo('America/Cuiaba')).strftime('%d/%m/%Y, %H:%M %z')
     market = ''.join(f'<div class="market"><span>{esc(m["instrument"])}</span><strong>{esc(m["value"])}</strong><em>{esc(m["change"])}</em><small>{esc(m["reference"])}</small></div>' for m in data['markets'])
@@ -114,13 +128,13 @@ def render():
         assert card['section'] in {'mercados', 'politica', 'conflitos', 'ia', 'pablo', 'turismo', 'negocios'}
         cards.append(f'<article class="news-card" data-section="{esc(card["section"])}"><button class="card-head" type="button" aria-expanded="false" aria-controls="card-{i}"><span class="tag">{esc(card["tag"])}</span><span class="chev">+</span><h3>{esc(card["title"])}</h3></button><div class="card-body" id="card-{i}"><p>{esc(card["text"])}</p><div class="impact"><span>POR QUE IMPORTA</span><p>Leitura editorial: {esc(card["impact"])}</p></div><div class="meta">Fontes e datas de referência</div>{sources(card["sources"])}</div></article>')
     replace_section('noticias', '<section id="noticias"><h2 class="section-title">POLÍTICA · GEOPOLÍTICA · CONFLITOS · TECNOLOGIA · TURISMO · CAPITAL</h2>' + '\n'.join(cards) + '</section>')
-    replace_section('decisao', '<section id="decisao" class="box"><h2 class="section-title">RADAR PARA DECISÃO · GRUPO CURUPY</h2><ul>' + ''.join(f'<li>{esc(v)}</li>' for v in data['decisions']) + '</ul></section>')
+    replace_section('decisao', '<section id="decisao" class="box"><h2 class="section-title">RADAR PARA DECISÃO · GRUPO CURUPY</h2><ul>' + ''.join(f'<li>{prose(v)}</li>' for v in data['decisions']) + '</ul></section>')
     def box(title, body):
         nonlocal page
         pattern = rf'<section class="box"><h2 class="section-title">{re.escape(title)}</h2>[\s\S]*?</section>'
         page, count = re.subn(pattern, lambda m: f'<section class="box"><h2 class="section-title">{title}</h2>{body}</section>', page, count=1)
         assert count == 1
-    box('3 COISAS PARA ACOMPANHAR HOJE', '<ol>' + ''.join(f'<li>{esc(v)}</li>' for v in data['watch']) + '</ol>')
+    box('3 COISAS PARA ACOMPANHAR HOJE', '<ol>' + ''.join(f'<li>{prose(v)}</li>' for v in data['watch']) + '</ol>')
     reading = data['reading']
     box('1 LEITURA PARA GUARDAR', f'<p><strong>{esc(reading["title"])}</strong> {esc(reading["text"])}</p>{source(reading["source"])}')
     box('CRITÉRIO EDITORIAL', f'<p class="sub">Pesquisa concluída em {now} · America/Cuiaba. Leitura estimada: 5–8 minutos. Interpretação editorial identificada separadamente dos fatos.</p>' + ''.join(f'<p class="sub">{esc(v)}</p>' for v in data['disclosure']))
@@ -164,6 +178,7 @@ def validate():
     before = original('index.html')
     for text in [latest, archived]:
         info = complete(text)
+        assert '<div class="edition">' + DATE_LABEL + '<br>' in text, 'Data visível divergente'
         assert info.images == Info(before).images, 'Logo alterada'
         for tag in ['style', 'script']:
             pattern = rf'<{tag}[^>]*>[\s\S]*?</{tag}>'
