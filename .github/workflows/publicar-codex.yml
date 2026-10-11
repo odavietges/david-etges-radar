@@ -1,0 +1,98 @@
+name: Publicar THE PULSE com Codex
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: pulse-daily-publication
+  cancel-in-progress: false
+jobs:
+  preparar:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    outputs:
+      date: ${{ steps.data.outputs.date }}
+      exists: ${{ steps.data.outputs.exists }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - id: data
+        name: Calcular data e impedir duplicação
+        run: |
+          cp operacao/codex_publicacao.py "$RUNNER_TEMP/pulse-trusted.py"
+          python3 "$RUNNER_TEMP/pulse-trusted.py" preflight
+      - name: Instalar Codex
+        if: steps.data.outputs.exists != 'true'
+        run: npm install --global @openai/codex@0.162.1
+      - name: Pesquisar e preparar a edição
+        if: steps.data.outputs.exists != 'true'
+        env:
+          CODEX_ACCESS_TOKEN: ${{ secrets.CODEX_ACCESS_TOKEN }}
+          PULSE_DATE: ${{ steps.data.outputs.date }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$CODEX_ACCESS_TOKEN" || { echo '::error::Segredo CODEX_ACCESS_TOKEN ausente'; exit 1; }
+          python3 "$RUNNER_TEMP/pulse-trusted.py" prompt > "$RUNNER_TEMP/pulse-prompt.txt"
+          if ! codex --ask-for-approval never exec --sandbox workspace-write --ephemeral --json -c 'web_search="live"' - < "$RUNNER_TEMP/pulse-prompt.txt" > "$RUNNER_TEMP/pulse-events.jsonl" 2> "$RUNNER_TEMP/pulse-stderr.txt"; then
+            echo '::error::Codex não concluiu a pesquisa. Nenhum push foi executado; conferir autenticação, limites e política do workspace.'
+            exit 1
+          fi
+          python3 "$RUNNER_TEMP/pulse-trusted.py" research-check
+      - name: Validar os quatro arquivos e preservar identidade e histórico
+        if: steps.data.outputs.exists != 'true'
+        env:
+          PULSE_DATE: ${{ steps.data.outputs.date }}
+        run: python3 "$RUNNER_TEMP/pulse-trusted.py" validate
+      - uses: actions/upload-artifact@v4
+        if: steps.data.outputs.exists != 'true'
+        with:
+          name: pulse-edition-${{ github.run_id }}
+          if-no-files-found: error
+          retention-days: 3
+          path: |
+            index.html
+            arquivo/${{ steps.data.outputs.date }}.html
+            arquivo/edicoes.json
+            arquivo/index.html
+  publicar:
+    needs: preparar
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    permissions:
+      contents: write
+      pages: write
+      actions: write
+    env:
+      PULSE_DATE: ${{ needs.preparar.outputs.date }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.sha }}
+      - uses: actions/download-artifact@v4
+        if: needs.preparar.outputs.exists != 'true'
+        with:
+          name: pulse-edition-${{ github.run_id }}
+          path: ${{ runner.temp }}/pulse-edition
+      - name: Publicar um único commit sem sobrescrever alterações concorrentes
+        if: needs.preparar.outputs.exists != 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          pulse_head=$(git ls-remote origin refs/heads/main | cut -f1)
+          test "$pulse_head" = "$GITHUB_SHA" || { echo '::error::main mudou durante a pesquisa. Alterações preservadas; repetir manualmente após revisão.'; exit 1; }
+          python3 operacao/codex_publicacao.py copy
+          python3 operacao/codex_publicacao.py validate
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- index.html "arquivo/$PULSE_DATE.html" arquivo/edicoes.json arquivo/index.html
+          git diff --cached --check
+          git commit -m "THE PULSE — $PULSE_DATE"
+          git push origin HEAD:refs/heads/main
+          test "$(git ls-remote origin refs/heads/main | cut -f1)" = "$(git rev-parse HEAD)"
+      - name: Confirmar Pages e acionar a validação pública para o mesmo commit
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 operacao/codex_publicacao.py confirm
+
