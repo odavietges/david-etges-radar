@@ -2,19 +2,25 @@
 
 ## Operação em nuvem
 
-As tarefas hospedadas no ChatGPT são Publicar THE PULSE (06:45) e Avisar THE PULSE (07:30), todos os dias no fuso America/Cuiaba (UTC-04:00). A integração GitHub conectada escreve no repositório público; GitHub Pages publica main. Não há executor local, token fornecido pelo usuário ou segredo neste repositório. O horário de início oferece 45 minutos; não é garantia de conclusão. O aviso informa pendência se a publicação não for confirmada.
+Migração autorizada e testada em 11/10/2026: GitHub Actions hospedado executa Codex CLI, autenticado com o segredo Actions CODEX_ACCESS_TOKEN do workspace Business. O token nunca entra no Git, no conteúdo ou nos logs; a execução usa os limites do workspace. Não depende do notebook. Não é um agendador recorrente nativo do Codex Cloud.
+
+Publicar THE PULSE com Codex tem cron ativo `45 10 * * *` (06:45 America/Cuiaba). Esse é o início da pesquisa, não uma garantia de conclusão no minuto. O workflow Validar publicação pública mantém seu cron `30 11 * * *` (07:30). Avisar THE PULSE permanece ativo no ChatGPT diariamente às 07:30 AMT: exige edição corrente, Pages success e validação pública success para o mesmo head antes de avisar. Sua configuração foi conferida na interface oficial.
+
+Evidências: teste isolado [38155701493](https://github.com/odavietges/david-etges-radar/actions/runs/38155701493); publicação completa [38157373354](https://github.com/odavietges/david-etges-radar/actions/runs/38157373354), commit editorial 7f3a29f7d558beb2dcc24840e3ad53f6e4d411ac; correção da data visível e links b8e8c93bf0b177be5a87425f09d4c97baecf240e; reexecução idempotente [38158134968](https://github.com/odavietges/david-etges-radar/actions/runs/38158134968) concluída com sucesso sem novo commit editorial. A edição 006 de 11/10 está pública; as edições anteriores foram preservadas. As tentativas editoriais iniciais falharam antes do push; a arquitetura final usa pesquisa somente leitura e montagem determinística fora do agente.
+
+O cron foi habilitado somente após esses testes. A primeira execução agendada após a ativação ainda precisa ocorrer. GitHub Actions pode atrasar ou deixar de disparar eventos sob carga e pode desativar cron de repositório público após 60 dias sem atividade. Verificar runs em caso de falta de edição; não mudar sua data artificialmente. Renovar o segredo pelo fluxo oficial quando o token expirar.
 
 ## Transação de conteúdo
 
 1. Calcular a data corrente no fuso indicado. Ler README, head de main, sua árvore, index.html e arquivo/edicoes.json.
 2. Preservar todos os arquivos de datas anteriores byte a byte. Se a última edição ainda não tiver arquivo datado, preservá-la antes da substituição. Nunca fabricar uma edição para preencher um dia ausente.
 3. Se a edição corrente já estiver completa e pública, validar e encerrar sem commit ou duplicata.
-4. Pesquisar as fontes públicas, preparando HTML/CSS/JS autocontido com logo e identidade existentes. Manter regras editoriais: política neutra, alegações de conflitos atribuídas e cruzadas com fontes independentes, Pablo Spyer somente em conteúdo público verificável, monitoramento das entidades de turismo já aprovadas.
+4. Pesquisar fontes públicas com Codex em modo somente leitura e obter dados estruturados, sem shell, arquivos ou credenciais Git. O renderizador confiável monta HTML a partir da edição existente, preservando CSS, JS e logo. Manter regras editoriais: política neutra, alegações de conflitos atribuídas e cruzadas com fontes independentes, Pablo Spyer somente em conteúdo público verificável, monitoramento das entidades de turismo já aprovadas.
 5. Preparar index.html, arquivo/YYYY-MM-DD.html, arquivo/edicoes.json e arquivo/index.html como um conjunto. Os registros ficam em ordem de data decrescente, sem duplicatas e com links existentes.
 6. Identificar a edição com meta pulse-edition-date, meta pulse-edition-status=complete e body data-edition-date. No arquivo datado, informar que é uma edição arquivada. O link de histórico deve resolver corretamente a partir de ambas as localizações.
 7. Validar dados, fontes, horários das cotações, estrutura HTML, JS, links e datas. Não preencher cotação indisponível com estimativa.
-8. Pela integração GitHub, criar blobs (create_blob), árvore baseada na árvore lida (create_tree) e commit cujo parent é o head lido (create_commit). Atualizar main (update_ref) com expected_sha=head e force=false.
-9. Em concorrência, reler o novo head e preservar as alterações. Não forçar a referência. Antes da atualização de main, nenhum blob ou commit isolado muda o site.
+8. Na rotina Actions, um job sem credenciais Git prepara e valida a edição. Apenas os quatro arquivos seguem em artefato para outro job, sem token Codex, que confere main, cria um único commit e faz push sem force. Fora dessa rotina, a integração continua sujeita aos controles oficiais; não contornar operações negadas.
+9. Se main mudou durante a pesquisa, interromper sem sobrescrever alterações e revisar antes de nova execução. O push sem force também rejeita uma corrida posterior. Antes do push, a preparação não modifica o site.
 10. O workflow Validar publicação pública roda a cada push e compara os quatro arquivos e todas as edições do registro com as respectivas respostas HTTPS públicas, byte a byte. Aguarda até dez minutos a propagação do Pages. Só tem permissão de leitura e não modifica conteúdos. Uma execução success associada ao head que contém a edição é uma prova independente da publicação pública, consultável pela integração GitHub mesmo quando a ferramenta web não consegue abrir Pages. Exigir data da edição corrente no repositório, deploy Pages success e este workflow success. Resultado histórico de outra edição não basta.
 11. Reler os quatro arquivos e confirmar seu conteúdo. Verificar o workflow Pages associado ao commit: completed e success. Abrir a URL pública e confirmar data, conteúdo, filtros, cards, arquivo datado e histórico.
 
@@ -50,3 +56,9 @@ Essa conferência é somente leitura, não gera notícias e não substitui Publi
 Não existe correção de YAML capaz de remover uma negativa externa de segurança. Não mover a escrita para outro conector, GitHub Actions, navegador ou credencial para evitar a negativa. Registrar a resposta exata quando disponível e encaminhar a revisão pelos controles oficiais da integração. Não repetir a operação negada, publicar conteúdo sem pesquisa atual, avançar a data nem pausar tarefas por falha isolada. As regras de transação atômica dos quatro arquivos permanecem obrigatórias.
 
 A criação de objetos Git para a correção foi aceita nesta sessão pela conexão existente. Isso confirma apenas essas operações, não a remoção da regra externa nem a capacidade de uma futura tarefa agendada. A recuperação editorial de 08/10 usa nova pesquisa pública; nenhuma afirmação do relato anterior foi reutilizada como evidência de notícia.
+
+## Caminho oficial hospedado
+
+Codex access tokens: https://learn.chatgpt.com/docs/enterprise/access-tokens . GitHub schedule: https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule .
+
+Commits feitos pelo GITHUB_TOKEN não acionam automaticamente builds Pages nem workflows de push. A rotina solicita POST /pages/builds com pages:write, exige status built para o SHA publicado, aciona Validar publicação pública via workflow_dispatch com actions:write e exige success para esse mesmo SHA e data corrente. Falha de permissão encerra a etapa; não usar outra credencial para contorná-la. Esse caminho passou no teste real e o cron foi habilitado depois da validação. A tarefa antiga de publicação no ChatGPT só deve ser pausada após confirmar a substituição; manter Avisar THE PULSE.

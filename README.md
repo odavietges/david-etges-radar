@@ -14,7 +14,13 @@ A operação diária não depende do notebook do usuário.
 
 Fluxo:
 
-ChatGPT Automation → GitHub Connector → repositório → GitHub Pages → navegador.
+Caminho hospedado implantado e testado em 11/10/2026:
+
+GitHub Actions hospedado → pesquisa Codex CLI com token Business → montagem pelo renderizador confiável → validação dos quatro arquivos → commit único → solicitação explícita de build Pages → validação pública.
+
+O teste isolado de autenticação, pesquisa web e escrita passou (run 38155701493). A publicação editorial completa passou no [run 38157373354](https://github.com/odavietges/david-etges-radar/actions/runs/38157373354), com os quatro arquivos em um commit, Pages e validação pública. A reexecução [38158134968](https://github.com/odavietges/david-etges-radar/actions/runs/38158134968) passou sem duplicar a edição. O cron de publicação está habilitado em main. A primeira execução diária após a ativação ainda deve ser observada; testes manuais não comprovam disparos futuros.
+
+O token está exclusivamente no segredo Actions `CODEX_ACCESS_TOKEN`; não é uma chave de API faturada separadamente. A execução diária usará a autorização e os limites do workspace.
 
 ## Estrutura
 
@@ -26,16 +32,16 @@ ChatGPT Automation → GitHub Connector → repositório → GitHub Pages → na
 
 ## Rotina diária
 
-- 06:45 America/Cuiaba: a automação pesquisa, gera e publica a edição.
-- 07:30 America/Cuiaba: a automação de aviso confirma se a edição do dia está publicada e envia o link fixo.
+- 06:45 America/Cuiaba: início programado de pesquisa e publicação no workflow `Publicar THE PULSE com Codex`, cron `45 10 * * *` em UTC. A conclusão depende do tempo de pesquisa e deploy.
+- 07:30 America/Cuiaba: o workflow existente confere a data e os bytes públicos. A tarefa hospedada Avisar THE PULSE permanece ativa diariamente às 07:30 AMT; seu prompt exige data corrente, deploy Pages e validação pública para o mesmo head antes do aviso de sucesso. Configuração conferida na interface oficial em 11/10/2026.
 
 ## Regras de publicação
 
 1. Ler head, árvore, edição vigente e registro completo.
 2. Preservar os bytes de todos os arquivos de edições anteriores.
 3. Preparar e validar os quatro arquivos da edição antes de atualizar main.
-4. Criar blobs, uma árvore baseada no head vigente e um único commit.
-5. Atualizar main com expected_sha e force=false; jamais forçar ou apagar histórico.
+4. Criar um único commit dos quatro arquivos, baseado no head vigente.
+5. Conferir o head remoto e atualizar main por push sem force; jamais forçar ou apagar histórico.
 6. Reler os quatro arquivos, exigir deploy Pages concluído com success e conferir a página pública.
 7. Só anunciar sucesso quando a data pública for a data corrente em America/Cuiaba.
 8. Em falha, preservar a última edição válida, explicitar a etapa pendente e manter as tarefas agendadas.
