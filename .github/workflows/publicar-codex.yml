@@ -35,11 +35,12 @@ jobs:
           set -euo pipefail
           test -n "$CODEX_ACCESS_TOKEN" || { echo '::error::Segredo CODEX_ACCESS_TOKEN ausente'; exit 1; }
           python3 "$RUNNER_TEMP/pulse-trusted.py" prompt > "$RUNNER_TEMP/pulse-prompt.txt"
-          if ! codex --ask-for-approval never exec --sandbox workspace-write --ephemeral --json -c 'web_search="live"' --output-schema "$RUNNER_TEMP/pulse-result-schema.json" --output-last-message "$RUNNER_TEMP/pulse-result.json" - < "$RUNNER_TEMP/pulse-prompt.txt" > "$RUNNER_TEMP/pulse-events.jsonl" 2> "$RUNNER_TEMP/pulse-stderr.txt"; then
+          if ! codex --ask-for-approval never exec --sandbox read-only --ephemeral --json -c 'web_search="live"' --output-schema "$RUNNER_TEMP/pulse-result-schema.json" --output-last-message "$RUNNER_TEMP/pulse-result.json" - < "$RUNNER_TEMP/pulse-prompt.txt" > "$RUNNER_TEMP/pulse-events.jsonl" 2> "$RUNNER_TEMP/pulse-stderr.txt"; then
             echo '::error::Codex não concluiu a pesquisa. Nenhum push foi executado; conferir autenticação, limites e política do workspace.'
             exit 1
           fi
           python3 "$RUNNER_TEMP/pulse-trusted.py" research-check
+          python3 "$RUNNER_TEMP/pulse-trusted.py" render
       - name: Validar os quatro arquivos e preservar identidade e histórico
         if: steps.data.outputs.exists != 'true'
         env:
