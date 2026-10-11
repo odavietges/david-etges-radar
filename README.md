@@ -18,7 +18,7 @@ Caminho hospedado implantado e testado em 11/10/2026:
 
 GitHub Actions hospedado → pesquisa Codex CLI com token Business → montagem pelo renderizador confiável → validação dos quatro arquivos → commit único → solicitação explícita de build Pages → validação pública.
 
-O teste isolado de autenticação, pesquisa web e escrita passou (run 38155701493). A publicação editorial completa passou no [run 38157373354](https://github.com/odavietges/david-etges-radar/actions/runs/38157373354), com os quatro arquivos em um commit, Pages e validação pública. A reexecução [38158134968](https://github.com/odavietges/david-etges-radar/actions/runs/38158134968) passou sem duplicar a edição. O cron de publicação está habilitado em main. A primeira execução diária após a ativação ainda deve ser observada; testes manuais não comprovam disparos futuros.
+O teste isolado de autenticação, pesquisa web e escrita passou (run 38155701493). A publicação editorial completa passou no [run 38157373354](https://github.com/odavietges/david-etges-radar/actions/runs/38157373354), com os quatro arquivos em um commit, Pages e validação pública. A reexecução [38158134968](https://github.com/odavietges/david-etges-radar/actions/runs/38158134968) passou sem duplicar a edição. O cron de publicação está habilitado em main. Após os testes, a antiga tarefa Publicar THE PULSE do ChatGPT foi pausada, sem exclusão; Avisar THE PULSE permanece ativa. A primeira execução diária após a ativação ainda deve ser observada; testes manuais não comprovam disparos futuros.
 
 O token está exclusivamente no segredo Actions `CODEX_ACCESS_TOKEN`; não é uma chave de API faturada separadamente. A execução diária usará a autorização e os limites do workspace.
 
