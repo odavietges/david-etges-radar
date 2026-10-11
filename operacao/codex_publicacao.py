@@ -165,6 +165,12 @@ elif command == 'prompt':
 elif command == 'research-check':
     path = Path(os.environ['RUNNER_TEMP']) / 'pulse-events.jsonl'
     events = [json.loads(line) for line in path.read_text().splitlines() if line.strip()]
+    commands = [e.get('item', {}) for e in events if e.get('item', {}).get('type') == 'command_execution']
+    print('Comandos locais observados: ' + str(len(commands)), flush=True)
+    diagnostics = '\n'.join(str(c.get('aggregated_output', '')) for c in commands).lower()
+    signatures = ['bwrap', 'landlock', 'operation not permitted', 'sandbox initialization', 'permission denied', 'no such file or directory', 'exec format error', 'command not found']
+    print('Indícios fixos de erro local: ' + ', '.join(s for s in signatures if s in diagnostics), flush=True)
+    print('Códigos de saída locais: ' + ', '.join(str(c.get('exit_code')) for c in commands if c.get('exit_code') is not None), flush=True)
     assert any(e.get('type') == 'turn.completed' for e in events)
     assert any(e.get('item', {}).get('type') == 'web_search' for e in events), 'Pesquisa web não observada'
     result = json.loads((Path(os.environ['RUNNER_TEMP']) / 'pulse-result.json').read_text())
