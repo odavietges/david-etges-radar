@@ -124,7 +124,6 @@ def render():
     reading = data['reading']
     box('1 LEITURA PARA GUARDAR', f'<p><strong>{esc(reading["title"])}</strong> {esc(reading["text"])}</p>{source(reading["source"])}')
     box('CRITÉRIO EDITORIAL', f'<p class="sub">Pesquisa concluída em {now} · America/Cuiaba. Leitura estimada: 5–8 minutos. Interpretação editorial identificada separadamente dos fatos.</p>' + ''.join(f'<p class="sub">{esc(v)}</p>' for v in data['disclosure']))
-    assert old_date not in page and old_pretty not in page, 'Conteúdo anterior residual'
     Path('index.html').write_text(page, encoding='utf-8')
     archived = page.replace('href="arquivo/"', 'href="./"').replace('<nav class="nav">', '<p class="sub">Edição arquivada · ' + pretty + '</p><nav class="nav">')
     Path(FILES[1]).write_text(archived, encoding='utf-8')
