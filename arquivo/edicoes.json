@@ -1,6 +1,11 @@
 {
   "editions": [
     {
+      "date": "2026-10-23",
+      "title": "THE PULSE · 23/10/2026",
+      "path": "2026-10-23.html"
+    },
+    {
       "date": "2026-10-22",
       "title": "THE PULSE · 22/10/2026",
       "path": "2026-10-22.html"
