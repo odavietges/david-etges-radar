@@ -1,0 +1,20 @@
+name: Monitorar pontualidade THE PULSE
+on:
+  schedule:
+    - cron: '30 11 * * *' # Prazo 07:30 America/Cuiaba; schedule pode atrasar
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  monitorar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Conferir edição corrente e provas do head atual
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 operacao/estado_publicacao.py monitor

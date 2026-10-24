@@ -15,6 +15,13 @@ parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("--require-current", action="store_true",
                     help="Exigir edição da data corrente em America/Cuiaba")
 args = parser.parse_args()
+expected_sha = os.environ.get("EXPECTED_SHA", "")
+if expected_sha:
+    assert re.fullmatch(r"[0-9a-f]{40}", expected_sha), "SHA esperado inválido"
+    assert os.environ.get("GITHUB_SHA") == expected_sha, "SHA do disparo diverge do esperado"
+expected_date = os.environ.get("EXPECTED_DATE", "")
+if expected_date:
+    assert re.fullmatch(r"\d{4}-\d{2}-\d{2}", expected_date), "Data esperada inválida"
 ROOT = Path(__file__).resolve().parents[1]
 BASE = "https://odavietges.github.io/david-etges-radar/"
 registry = json.loads((ROOT / "arquivo/edicoes.json").read_text(encoding="utf-8"))
@@ -23,6 +30,8 @@ dates = [entry["date"] for entry in editions]
 assert dates and dates == sorted(set(dates), reverse=True), "Datas ausentes, fora de ordem ou duplicadas"
 date = dates[0]
 assert re.fullmatch(r"\d{4}-\d{2}-\d{2}", date), "Data inválida"
+if expected_date:
+    assert date == expected_date, "Edição diverge da data esperada"
 html = (ROOT / "index.html").read_text(encoding="utf-8")
 class PageInfo(HTMLParser):
     def __init__(self, text):
@@ -72,8 +81,11 @@ while True:
     failures = []
     for path, wanted in expected.items():
         try:
+            remaining = deadline - time.monotonic()
+            if remaining <= 0:
+                raise TimeoutError("Prazo da comparação pública esgotado")
             req = Request(BASE + path, headers={"Cache-Control": "no-cache", "User-Agent": "THE-PULSE-public-validation"})
-            with urlopen(req, timeout=25) as response:
+            with urlopen(req, timeout=min(25, remaining)) as response:
                 actual = response.read()
             if actual != wanted:
                 failures.append(path + ": conteúdo público difere do commit")
@@ -84,9 +96,10 @@ while True:
     if time.monotonic() >= deadline:
         raise RuntimeError("\n".join(failures))
     print("Aguardando Pages: " + "; ".join(failures), flush=True)
-    time.sleep(20)
+    time.sleep(min(20, max(0, deadline - time.monotonic())))
 now = datetime.now(ZoneInfo("America/Cuiaba"))
 lines = [f"Commit verificado: {os.environ.get('GITHUB_SHA', 'indisponivel')}",
+         f"Publicação: {os.environ.get('PUBLICATION_ID', 'manual/push')}",
          f"Edição pública verificada: {date}", f"Verificada em: {now.isoformat()}",
          f"Data corrente no fuso: {now.date().isoformat()}",
          f"Edição corresponde à data corrente: {date == now.date().isoformat()}"]

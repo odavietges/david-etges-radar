@@ -229,11 +229,14 @@ def confirm():
         assert time.monotonic() < deadline, 'Pages não confirmou este commit no prazo'
         time.sleep(20)
     assert api('branches/main')['commit']['sha'] == sha, 'main mudou durante Pages'
-    api('actions/workflows/validar-publicacao.yml/dispatches', {'ref': 'main', 'inputs': {'require_current': True}})
+    publication_id = os.environ['GITHUB_RUN_ID'] + '-' + os.environ['GITHUB_RUN_ATTEMPT']
+    api('actions/workflows/validar-publicacao.yml/dispatches', {
+        'ref': 'main', 'inputs': {'require_current': True, 'expected_sha': sha,
+                                  'expected_date': DATE, 'publication_id': publication_id}})
     deadline = time.monotonic() + 1000
     while True:
         runs = api('actions/workflows/validar-publicacao.yml/runs?event=workflow_dispatch&per_page=20')['workflow_runs']
-        matched = [r for r in runs if r['head_sha'] == sha and r['created_at'] >= started[:19] + 'Z']
+        matched = [r for r in runs if r['head_sha'] == sha and r.get('display_title') == 'Validar publicação pública · ' + publication_id and r['created_at'] >= started[:19] + 'Z']
         if matched and matched[0]['status'] == 'completed':
             run = matched[0]
             assert run['conclusion'] == 'success', 'Validação pública não concluiu com success'
