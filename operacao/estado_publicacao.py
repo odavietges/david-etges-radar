@@ -24,7 +24,8 @@ def api(path):
 
 
 def succeeded(runs, sha, name):
-    return next((r for r in runs if r['head_sha'] == sha and r['name'] == name
+    return next((r for r in runs if r['head_sha'] == sha and (r['name'] == name or
+                 (name == 'Validar publicação pública' and r.get('path') == '.github/workflows/validar-publicacao.yml'))
                  and r['status'] == 'completed' and r['conclusion'] == 'success'), None)
 
 

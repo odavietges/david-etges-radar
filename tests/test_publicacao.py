@@ -33,6 +33,11 @@ class PublicationTests(unittest.TestCase):
     def test_cancelled_deploy_does_not_hide_successful_deploy(self):
         self.assertTrue(self.check(runs=[run('pages build and deployment', conclusion='cancelled'), run('pages build and deployment'), run('Validar publicação pública')]))
 
+    def test_validation_run_name_can_include_publication_id(self):
+        validation = run('Validar publicação pública · 123-1')
+        validation['path'] = '.github/workflows/validar-publicacao.yml'
+        self.assertTrue(self.check(runs=[run('pages build and deployment'), validation]))
+
     def test_failed_validation_never_confirms(self):
         self.assertFalse(self.check(runs=[run('pages build and deployment'), run('Validar publicação pública', conclusion='failure')]))
 
